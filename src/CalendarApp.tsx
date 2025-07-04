@@ -1,10 +1,10 @@
-import { LoginPage } from './auth/pages/LoginPage';
+import { AppRoutes } from './router/AppRoutes';
 import { AppTheme } from './theme';
 
 export const CalendarApp = () => {
   return (
     <AppTheme>
-      <LoginPage />
+      <AppRoutes />
     </AppTheme>
   );
 };
