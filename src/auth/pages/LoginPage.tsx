@@ -17,7 +17,6 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      console.log('Entrooooo');
       navigate('/', { replace: true });
     }
   }, [status, navigate]);
