@@ -16,13 +16,14 @@ export const startGoogleSignIn = () => {
     const result = await singInWithGoogle();
     // if (!result.ok) return dispatch(logout(result.errorMessage));
     if (result.ok) {
-      const { displayName, email, photoURL, uid } = result;
+      const { displayName, email, photoURL, uid, calendarEvents } = result;
       dispatch(
         login({
           displayName: displayName ?? '',
           email: email ?? '',
           photoURL: photoURL ?? '',
           uid: uid ?? '',
+          calendarEvents: calendarEvents ?? [],
         }),
       );
     }
