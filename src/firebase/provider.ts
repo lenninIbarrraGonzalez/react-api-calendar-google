@@ -7,58 +7,61 @@ const googleProvider = new GoogleAuthProvider();
 // Agregar el scope de Calendar al proveedor
 googleProvider.addScope('https://www.googleapis.com/auth/calendar.readonly');
 
-export const singInWithGoogle = async () => {
+export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(FirebaseAuth, googleProvider);
     const { displayName, email, photoURL, uid } = result.user;
 
-    // Obtener el access token para Calendar
+    // Obtener el access token para usos posteriores
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const accessToken = credential?.accessToken;
 
-    let calendarEvents = [];
-    
-    if (accessToken) {
-      try {
-        const response = await fetch(
-          'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          calendarEvents = data.items || [];
-        }
-      } catch (calendarError) {
-        console.warn('Error fetching calendar events:', calendarError);
-        // No fallamos el login si hay error en calendar
-      }
-    }
-
     return {
       ok: true,
-      // User info
       displayName,
       email,
       photoURL,
       uid,
-      // Calendar events
-      calendarEvents,  };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-  
-      return {
-        ok: false,
-        errorMessage,
-      };
+      accessToken // Guardamos el token para usar después
+    };
+  } catch (error: any) {
+    return {
+      ok: false,
+      errorMessage: error.message
+    };
+  }
+};
+
+// calendar.js - Manejo específico del calendario
+export const fetchCalendarEvents = async (accessToken: string) => {
+  try {
+    const response = await fetch(
+      'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Error fetching calendar events');
     }
-  };
+
+    const data = await response.json();
+    return {
+      ok: true,
+      events: data.items || []
+    };
+  } catch (error: any) {
+    return {
+      ok: false,
+      errorMessage: error.message
+    };
+  }
+};
   
-  export const logoutFirebase = async () => {
-    return await FirebaseAuth.signOut();
-  };
+export const logoutFirebase = async () => {
+  return await FirebaseAuth.signOut();
+};
   

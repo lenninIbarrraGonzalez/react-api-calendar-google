@@ -8,7 +8,7 @@ interface AuthState {
   displayName: string | null;
   photoURL: string | null;
   errorMessage: string | null;
-  calendarEvents: any[];
+  accessToken: string | null;
 }
 
 const initialState: AuthState = {
@@ -18,7 +18,7 @@ const initialState: AuthState = {
   displayName: null,
   photoURL: null,
   errorMessage: null,
-  calendarEvents: [],
+  accessToken: null,
 };
 
 interface LoginPayload {
@@ -26,7 +26,7 @@ interface LoginPayload {
   email: string;
   displayName: string;
   photoURL: string;
-  calendarEvents: any[];
+  accessToken: string;
 }
 
 export const authSlice = createSlice({
@@ -39,8 +39,8 @@ export const authSlice = createSlice({
       state.email = payload.email;
       state.displayName = payload.displayName;
       state.photoURL = payload.photoURL;
-      state.calendarEvents = payload.calendarEvents;
       state.errorMessage = null;
+      state.accessToken = payload.accessToken;
     },
     checkingCredentials: (state) => {
       state.status = 'checking';
