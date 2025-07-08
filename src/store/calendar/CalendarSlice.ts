@@ -3,10 +3,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface CalendarState {
     calendarEvents: any[];
+    errorMessage: string | null;
 }
 
 const initialState: CalendarState = {
     calendarEvents: [],
+    errorMessage: null,
 }
 
 export const calendarSlice = createSlice({
@@ -15,6 +17,10 @@ export const calendarSlice = createSlice({
     reducers: {
         setCalendarEvents: (state, action: PayloadAction<any[]>) => {
             state.calendarEvents = action.payload;
+            state.errorMessage = null;
+        },
+        setErrorMessage: (state, action: PayloadAction<string>) => {
+            state.errorMessage = action.payload;
         },
     },
 });

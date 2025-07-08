@@ -2,7 +2,7 @@
 import { checkingCredentials, login } from './';
 import type { AppDispatch } from '../store';
 import { fetchCalendarEvents, signInWithGoogle } from '../../firebase/provider';
-
+import { setCalendarEvents } from '../calendar/CalendarSlice';
 
 export const checkingAuthentication = () => {
   return async (dispatch: AppDispatch) => {
@@ -31,9 +31,9 @@ export const startGoogleSignIn = () => {
       if (accessToken) {
         const calendarResult = await fetchCalendarEvents(accessToken);
         console.log(calendarResult);
-        // if (calendarResult.ok) {
-        //   dispatch(setCalendarEvents(calendarResult.events));
-        // }
+        if (calendarResult.ok) {
+          dispatch(setCalendarEvents(calendarResult.events));
+        }
       }
     }
   };
